@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlickMeet</title>
+    <!-- <link rel="icon" type="image/x-icon" href="../My_App/public/Assets/images/favicon/flickmeet.png"> -->
+    <link rel="icon" type="image/x-icon" href="../My_App/public/Assets/images/favicon/flickmeet.png">
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothnesss/theme.css">
+    <script src="//code.jquery.com.ui/1.11.0/jQuery-ui.js"></script> -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="../public/Assets/css/style.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script> -->
+
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script> -->
+    <script src="../public/Assets/js/app.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/socket.io@2.3.0/dist/socket.io.js"></script>
+
+    <!-- <script>
+        $(document).ready(function() {
+            alert("document.ready")
+        })
+    </script> -->
+
+    <script>
+        // $(function() {
+        //     const urlParams = new URLSearchParams(window.location.search);
+        //     var meeting_id = urlParams.get('meetingID');
+        //     var user_id = window.prompt('Enter your username');
+
+        //     if(!user_id || !meeting_id){
+        //         alert('User id is meeting id is missing');
+        //         window.location.href = '/action.html'
+        //         return;
+        //     }
+
+        //     $("#meetingContainer").show();
+
+        //     MyApp._init(user_id , meeting_id);
+        // })
+
+        document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        var meeting_id = urlParams.get('meetingID');
+        var user_id = window.prompt('Enter your username');
+
+        if (!user_id || !meeting_id) {
+            alert('User id or meeting id is missing');
+            window.location.href = '/action';
+            return;
+        }
+
+        const msgbox = document.querySelector('#msgbox');
+        const send = document.querySelector('#send');
+
+        const peopleHeading = document.querySelector('.people-heading');
+        const chatHeading = document.querySelector('.chat-heading');
+        const inCallWrapUp = document.querySelector('.in-call-wrap-up');
+        const chatShowWrap = document.querySelector('.chat-show-wrap');     
+        const meetingHeadingCross = document.querySelector('.meeting-heading-cross');     
+        const topLeftParticipantWrap = document.querySelector('.top-left-participant-wrap');
+        const topLeftChatWrap = document.querySelector('.top-left-chat-wrap');
+
+        
+        peopleHeading.addEventListener('click' , ()=> {
+            inCallWrapUp.style.display = 'block';
+            chatShowWrap.style.display = 'none';
+            // document.querySelector(".people-heading-text").style.backgroundColor = 'green';
+            // document.querySelector(".people-heading").style.backgroundColor = 'green';
+            // document.querySelector(".participant-count").style.backgroundColor = 'green';
+            //  document.querySelector("#people").style.backgroundColor = 'green'; 
+            
+            //     document.querySelectorAll('.people-heading').forEach(element => {
+            //     element.addEventListener('click', function() {
+            //     this.classList.add('active');
+            //     document.querySelectorAll('.chat-heading').forEach(el => {
+            //       el.classList.remove('active');
+            //     //   document.querySelector('.active').style.backgroundColor='green';
+            //     });
+            //   });
+            // });
+        })
+
+        chatHeading.addEventListener('click' , ()=> {
+            chatShowWrap.style.display = 'block';
+            // msgbox.style.marginTop = '400px';
+            // send.style.marginTop = '400px';
+            inCallWrapUp.style.display = 'none';
+            // chatHeading.style.backgroundColor = 'green';
+
+        //     document.querySelectorAll('.chat-heading').forEach(element => {
+        //     element.addEventListener('click', function() {
+        //      this.classList.add('active');
+        //      document.querySelectorAll('.people-heading').forEach(el => {
+        //        el.classList.remove('active');
+        //      });
+        //    });
+        // });
+        })
+
+        
+
+        meetingHeadingCross.addEventListener('click' , ()=> {
+            document.querySelector('.g-right-details-wrap').style.display='none';
+        })
+
+        topLeftParticipantWrap.addEventListener('click' , ()=> {
+            document.querySelector('.g-right-details-wrap').style.display='block';
+            document.querySelector('.in-call-wrap-up').style.display='block';
+
+            chatShowWrap.style.display = 'none';
+        })
+        topLeftChatWrap.addEventListener('click' , ()=> {
+            document.querySelector('.g-right-details-wrap').style.display='block';
+            document.querySelector('.in-call-wrap-up').style.display='none';
+
+            chatShowWrap.style.display = 'block';
+        })
+
+        document.querySelector(".end-call-wrap").addEventListener('click' , ()=> {
+            document.querySelector(".top-box-show").style.display='block';
+            document.querySelector(".top-box-show").innerHTML='<div class="top-box align-vertical-middle profile-dialouge-show"> <h4 class="mt-2" style="text-align:center; ">Leave Meeting</h4> <hr> <div class="call-leave-cancel-action d-flex justify-content-center align-items-center w-100"> <a href="/action"> <button class="call-leave-action btn-danger mr-5">Leave</button> </a> <button class="call-cancel-action btn btn-secondary">Cancel</button> </div> </div>'
+        })
+       
+        document.addEventListener('mouseup', function(e) {
+    // Create an array containing the elements to check
+    var container = [];
+    container.push(document.querySelector('.top-box-show'));
+
+    // Iterate through the array and check if the click was outside any of the elements
+    container.forEach(function(element) {
+        if (element && !element.contains(e.target)) {
+            // If the clicked target is not within the element, empty the element's content
+            element.innerHTML = '';
+        }
+    });
+});
+
+        document.addEventListener('mouseup', function(e) {
+    // Create an array containing the elements to check
+    var container = [];
+    container.push(document.querySelector('.g-details'));
+    container.push(document.querySelector('.g-right-details-wrap'));
+
+    // Iterate through the array and check if the click was outside any of the elements
+    container.forEach(function(element) {
+        if (element && !element.contains(e.target)) {
+            // If the clicked target is not within the element, empty the element's content
+            element.style.display = 'none';
+        }
+    });
+});
+
+    // $(document).on("click", ".call-cancel-action", function() {
+    //     $('.top-box-show').html('')
+    // })
+    
+    // document.querySelector('.call-cancel-action').addEventListener("click", ()=> {
+    //     document.querySelector('.top-box-show').style.display = 'none';
+    // })
+
+   
+    // Function to handle the click event
+    function handleClick() {
+        var topBoxShow = document.querySelector(".top-box-show");
+        if (topBoxShow) {
+            topBoxShow.innerHTML = ''; // Clear the HTML content
+        }
+    }
+
+    // Delegate the click event to the document level
+    document.addEventListener("click", function(event) {
+        if (event.target.matches(".call-cancel-action")) {
+            handleClick();
+        }
+    });
+
+    var url2 = window.location.href;
+      var meetingUrlElement = document.querySelector('.meeting_url');
+
+      // Set the text content of the element to the URL
+      if (meetingUrlElement) {
+          meetingUrlElement.textContent = url2;
+      }
+      
+      document.querySelector('.copy_info').addEventListener('click', function() {
+            // Get the URL text from the meeting_url element
+            var url = document.querySelector('.meeting_url').textContent;
+            
+            // Create a temporary input element
+            var tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            // Copy the text inside the input
+            document.execCommand('copy');
+            
+            // Remove the temporary input element
+            document.body.removeChild(tempInput);
+            
+            // Show the confirmation message
+            var linkConf = document.querySelector('.link-conf');
+            linkConf.style.display = 'block';
+            
+            // Hide the confirmation message after 3 seconds
+            setTimeout(function() {
+                linkConf.style.display = 'none';
+            }, 3000);
+        });
+
+        var base_url = window.location.origin;
+
+        document.querySelector('.custom-file-input').addEventListener('change', function(event) {
+            // Get the file name from the input
+            const fileName = this.value.split('\\').pop();
+
+            // Find the label element that is a sibling of the input
+            const label = this.nextElementSibling;
+
+            // Update the label text and add the 'selected' class
+            if (label && label.classList.contains('custom-file-label')) {
+                label.classList.add('selected');
+                label.textContent = fileName;
+            }
+        });
+
+        document.addEventListener("click", function(event) {
+  if (event.target.classList.contains("share-attach")) {
+    event.preventDefault();
+    var customFileElement = document.querySelector("#customFile");
+    if (customFileElement !== null) {
+      var attImg =  customFileElement.files[0];
+      var formData = new FormData();
+      formData.append("zipfile", attImg);
+      formData.append("meeting_id", meeting_id);
+      formData.append("user_id", user_id);
+    //   alert(user_id)
+        console.log(formData);
+       // Function to upload data using fetch
+       function uploadData() {
+    const base_url = 'http://localhost:3000'; // Replace with your actual base URL
+    const url = `${base_url}/attachimg`;
+
+    // Create a FormData object
+    const formData = new FormData();
+    formData.append("meeting_id", meeting_id);
+      formData.append("user_id", user_id);
+    // Example: Add a file input value (make sure to replace 'fileInput' with your actual input field ID or name)
+    const fileInput = document.querySelector('#customFile');
+    if (fileInput && fileInput.files.length > 0) {
+        formData.append('file', fileInput.files[0]);
+    } else {
+        console.error('No file selected');
+        return; // Exit the function if no file is selected
+    }
+
+    // Send POST request using fetch
+    fetch(url, {
+        method: 'POST',
+        body: formData,
+        // No need to set mode: "no-cors" unless you have a specific reason
+    })
+    .then(response => {
+        if (!response.ok) {
+            // If the response status is not OK, log the status and response text
+            return response.text().then(text => {
+                throw new Error(`HTTP error! status: ${response.status}, response: ${text}`);
+            });
+        }
+        // Try parsing JSON response
+        return response.json();
+    })
+    .then(data => console.log(data)) // Handle success
+    .catch(error => console.log('Error:', error)); // Handle errors
+}
+
+// Call the function (or attach to an event)
+uploadData();
+
+    var attachFileArea = document.querySelector(".show-attach-file");
+    // Select the file input element
+var fileInput = document.getElementById('customFile');
+
+// Get the file path from the input element
+var filePath = fileInput.value;
+
+// Extract the file name from the path
+var attachFileName = filePath.split('\\').pop();
+
+    var attachFilePath = "public/attchment/"+meeting_id+"/"+attachFileName;
+    attachFileArea.innerHTML += "<div  class='left-align' style='display:flex; align-items:center;'><img src='public/Assets/images/Flickmeet/man.png' style='height:40px; width:40px;' class='caller-image circle'><div style='font-weight:600;margin:0 5px;'>"+user_id+"</div>:<div><a style='color:#007bff;' href='"+attachFilePath+"' download>"+attachFileName+"</a></div></div><br>";
+    // Select the label element with the class 'custom-file-label'
+var label = document.querySelector('label.custom-file-label');
+
+// Set the text content of the label to an empty string
+if (label) {
+    label.textContent = '';
+}
+
+    socket.emit("fileTransferToOther", {
+        username: user_id,
+        meetingid: meeting_id,
+        filePath: attachFilePath,
+        fileName: attachFileName
+    })
+
+    } else {
+      console.error("Element with class 'customFile' not found.");
+    }
+  }
+});
+
+
+        document.getElementById('meetingContainer').style.display = 'block';
+
+        MyApp._init(user_id, meeting_id);
+        
+        });
+
+    </script>
+   
+</head>
+<body >
+
+    <main class="d-flex flex-column home-wrap">
+        <div class="g-top text-light">
+            <div class="top-remote-video-show-wrap d-flex" style="background-color: rgb(24, 24, 24);">
+                <div id="meetingContainer" style="display: none; flex-basis: 75%;">
+                    <div class="call-wrap" style="background-color: black;">
+                        <div class="video-wrap" id="divUsers" style="display: flex; flex-wrap: wrap;">
+                            <div id="me" class="userbox display-center flex-column">
+                                <h2 class="display-center" style="font-size: 14px;"></h2>
+                                <div class="display-center">
+                                    
+                                    <video autoplay muted id="localVideoPlayer"></video>
+                                </div>
+                            </div>
+                            <div id="otherTemplate" class="userbox display-center flex-column" style="display: none;">
+                                <h2 class="display-center newVideo" style="font-size: 16px;"></h2>
+                                <div class="display-center">
+                                    <video autoplay muted></video>
+                                    <audio autoplay controls style="display: none;"></audio>
+                                </div>
+                            </div>
+                        
+                           
+                        </div>
+                    </div>
+                </div>
+
+                <div class="g-right-details-wrap text-secondary h-100" style="flex-basis: 25%; z-index: 1; display: none;">
+                    <div class="meeting-heading-wrap d-flex justify-content-between align-items-center pr-3 pl-3" style="height: 10vh;">
+                        <div class="meeting-heading font-weight-bold">
+                            Meeting Details
+                        </div>
+                        <div class="meeting-heading-cross display-center" style="cursor: pointer;">
+                            <span class="material-icons">clear</span>
+                        </div>
+                    </div>
+                    <div class="people-chat-wrap d-flex justify-content-between align-items-center ml-3 mr-3 pr-3 pl-3" style="height: 10vh; font-size: 14px;">
+                        <div class="people-heading display-center" style="cursor: pointer;">
+                            <div class="people-heading-icon display-center mr-1">
+                                <span class="material-icons" id="people">people</span>
+                            </div>
+                            <div class="people-heading-text display-center">
+                                Participant (<span class="participant-count">1</span>)
+                            </div>
+                        </div>
+                        <div class="chat-heading d-flex justify-content-round align-items-center" style="cursor: pointer;">
+                            <div class="chat-heading-icon display-center-mr-1">
+                                <span class="material-icons">message</span>
+                            </div>
+                            <div class="chat-heading-text">
+                                Chat
+                            </div>
+                        </div>
+                    </div>
+                    <div class="in-call-chat-wrap mr-3 ml-3 pl-3 pr-3" style="font-size: 14px;height: 69vh; overflow-y: scroll;">
+                        <div class="in-call-wrap-up" style="display: none !important;">
+                            <div class="in-call-wrap d-flex justify-content-between align-items-center mb-3" >
+                                <div class="participant-img-name-wrap display-center" style="cursor: pointer;">
+                                    <div class="participant-img">
+                                        <img src="../public/Assets/images/Flickmeet/man.png" alt="" class="border border-secondary" style="height: 40px; width: 40px; border-radius: 50%;">
+                                    </div>
+                                    <div class="participant-name ml-2">
+                                        You
+                                    </div>
+                                </div>
+                                <div class="participant-action-wrap display-center" >
+                                    <div class="participant-action-dot display-center mr-2" style="cursor: pointer;">
+                                        <span class="material-icons">more_vert</span>
+                                    </div>
+                                    <div class="participant-action-pin display-center mr-2" style="cursor: pointer;">
+                                        <span class="material-icons">push_pin</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-show-wrap text-secondary flex-column justify-content-between h-100" style="font-size: 14px; display: flex;">
+                            <div class="chat-message-show" id="messages">
+
+                            </div>
+                            <div class="chat-message-sent  d-flex-justify-content-between align-items-center abcd" id="btnset" style="margin-bottom: 30px; ">
+                            <div class="chat-message-sent-input" style="width: 100%;">
+                                <input type="text" name="" class="chat-message-sent-input-field" id="msgbox" placeholder="Send a message to everyone" style="border: none;border-bottom: 1px solid red; width: 100%;">
+                            </div>
+                            <div class="chat-message-sent-action display-center" id="btnsend" style="color: red; cursor: pointer;">
+                                <span class="material-icons" id="send">send</span>
+                            </div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="g-top-left bg-light text-secondary w-25 d-flex align-items-center justify-content-between pl-2 pr-2">
+                <div class="top-left-participant-wrap pt-2 cursor-pointer" style="background-color: white;">
+                    <div class="top-left-participant-icon" style="background-color: white;">
+                        <span class="material-icons" style="background-color: white; color: gray;">people</span>
+                    </div>
+                    <div class="top-left-participant-count participant-count">1</div>
+                </div>
+                <div class="top-left-chat-wrap pt-2 cursor-pointer" style="background-color: white;">
+                    <span class="material-icons" style="background-color: white; color: gray;">message</span>
+                </div>
+                <div class="top-left-time-wrap"></div>
+            </div>
+        </div>
+        
+        <div class="g-bottom bg-light m-0 d-flex justify-content-between align-items-center" >
+            <div class="bottom-left d-flex" style="height: 10vh; background-color: white; color: black;" >
+                <div class="g-details border border-success mb-2">
+                    <div class="g-details-heading bg-white d-flex justify-content-between align-items-center border-bottom pb-1">
+                        <div class="g-details-heading-detail bg-white d-flex align-items-center" style="cursor: pointer;">
+                            <span class="material-icons bg-white">error</span>
+                            <span class="bg-white" style="margin-top: -5px; ">Details</span>
+                        </div>
+                        <div class="g-details-heading-attachment bg-white d-flex align-items-center" style="cursor: pointer;"> 
+                            <span class="material-icons bg-white">attachment</span>
+                            <span class="bg-white" style="margin-top: -5px;">Attachment</span>
+                        </div>
+
+                    </div>
+                    <div class="g-details-heading-show-wrap">
+                          <div class="g-details-heading-show">
+                            <div style="font-weight: 600;color: gray;">Joining Info</div>
+                            <div class="meeting_url" data-toggle="tooltip" data-placement="top"></div>
+                            <div style="cursor: pointer;">
+                                <span class="material-icons" style="font-size: 14px;">content_copy</span>
+                                <span class="copy_info font-weight-bold">Copy Joining Info
+                                    <span style="display: none;background-color: rgb(148, 148, 148); border-radius: 5px; width: 100px; position: relative; top:-25px ; left: 150px;" class="link-conf font-weight-bold p-1">Link Copied</span>
+                                </span>
+                            </div>
+                          </div>
+                          <div class="g-details-heading-show-attachment" style="display: none; position: relative;">
+                            <div class="show-attach-file"></div>
+                            <div class="upload-attach-file">
+                                <form enctype="multipart/form-data" ref="uploadForm" class="display-center" id="uploadForm" style="justify-content: space-between;">
+                                    <div class="custom-file" style="flex-basis: 79%;">
+                                        <input type="file" class="custom-file-input" id="customFile" name="imagefile">
+                                        <label for="customFile" class="custom-file-label">Choose File</label>
+                                    </div>
+                                    <div class="share-button-wrap">
+                                        <button class="btn btn-primary btn-sm share-attach" style="flex-basis: 19%; padding: 6px 20px; " onclick="uploadData()">Share</button>
+                                    </div>
+                                </form>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+                <div class="display-center cursor-pointer meeting-details-button" style="background-color: white; color: black;">
+                    Meeting Details
+                    <span class="material-icons" style="background-color: white; color: black;">keyboard_arrow_down</span>
+                </div>
+            </div>  
+            <div class="bottom-middle d-flex justify-ontent-center align-items-center" style="height: 10vh;background-color: white;">
+                <div class="mic-toggle-wrap action-icon-style display-center mr-2 cursor-pointer" id="micMuteUnmute">
+                    <span class="material-icons">mic_off</span>
+                </div>
+                <div class="end-call-wrap action-icon-style display-center mr-2 cursor-pointer">
+                    <span class="material-icons text-danger">call</span>
+                </div>
+                <div class="video-toggle-wrap action-icon-style display-center cursor-pointer" id="videoCamOnOff">
+                    <span class="material-icons">videocam_off</span>
+                </div>
+            </div>
+            <div class="bottom-right d-flex justify-content-center align-items-center mr-3" style="height: 10vh; background-color: white; color: black;">
+                <div class="present-now-wrap d-flex justify-content-center align-items-center flex-column mr-5 cursor-pointer" id="ScreenShareOnOff" style="background-color: white; color: black;">
+                    <span class="material-icons" style="color: black; background-color: white;">present_to_all</span>
+                    <div style="color: black; background-color: white;">Present Now</div>
+                </div>
+                
+                <div class="option-wrap cursor-pointer display-center" style="height: 10vh; position: relative; background-color: white;">
+                   
+                    <div class="recording-show">
+                        <button class="btn btn-dark text-danger start-record">Start Recording</button>
+                    </div>
+                    <!-- <div class="option-icon" style="background-color: white;">
+                        <span class="material-icons" style="color: black; background-color: white;">more_vert</span>
+                    </div> -->
+                
+                </div>
+            </div>
+        </div>
+        <div class="top-box-show" style="display: none;">
+            
+        </div>
+    </main>
+</body>
+</html>

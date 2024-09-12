@@ -1,0 +1,122 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Georgia, "Times New Roman", Times, serif;
+  }
+  
+  body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url("../images/login/img.webp") no-repeat center center;
+    background-size: cover;
+  }
+  
+  form {
+    width: 90%;
+    max-width: 400px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  h1{
+    color: white;
+  }
+
+  h2 {
+    color: white;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  label {
+    color: white;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    border: 1px solid white;
+    outline: none;
+    font-size: 1em;
+    color: white;
+    padding: 0 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    width: 100%;
+    height: 50px;
+    border-radius: 40px;
+    border: none;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 10px 0;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    transition: 0.5s;
+  }
+  
+  button:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+  }
+  
+  /* Media Queries for responsiveness */
+  
+  /* Mobile devices */
+  @media (max-width: 767px) {
+    h2 {
+      font-size: 1.2em;
+    }
+  
+    form {
+      padding: 15px;
+    }
+  
+    input[type="text"] {
+      font-size: 0.9em;
+    }
+  
+    button {
+      font-size: 1em;
+    }
+  }
+  
+  /* Tablets and small desktops */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    h2 {
+      font-size: 1.4em;
+    }
+  
+    form {
+      padding: 20px;
+    }
+  
+    input[type="text"] {
+      font-size: 1em;
+    }
+  
+    button {
+      font-size: 1.1em;
+}
+  }
+  

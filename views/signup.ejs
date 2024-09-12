@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <link rel="icon" type="image/x-icon" href="../public/Assets/images/favicon/flickmeet.png">
+    <link rel="stylesheet" href="public/Assets/css/login.css">
+    <script src="https://kit.fontawesome.com/ecdcba1b66.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <img id="logo" src="public/Assets/images/login/flickmeet.png" alt="">
+    <div class="container2">
+        <h2>Sign up</h2>
+        <form id="myForm" action="/api/v1/auth/signup" method="post">
+            <div class="form-group">
+                <input type="text" name="username" id=""  required>
+                <label for="">Username</label>
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div class="form-group">
+                <input type="email" name="email" id=""  required>
+                <label for="">Email</label>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password" id="" required>
+                <label for="">Password</label>
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <a href="/action">
+            <input id="btn" type="submit" value="Register">
+            </a>
+
+            <p>
+               Already have an account?
+                <a href="login">Login</a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="icon" type="image/x-icon" href="../public/Assets/images/favicon/flickmeet.png">
+    <link rel="stylesheet" href="public/Assets/css/login.css">
+    <script src="https://kit.fontawesome.com/ecdcba1b66.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <img id="logo" src="public/Assets/images/login/flickmeet.png" alt="">
+    <div class="container1">
+        <h2>Login</h2>
+        <form method="post" action="/api/v1/auth/login">
+            <div class="form-group">
+                <input type="email" name="email" id=""  required>
+                <label for="">Email</label>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password" id="" required>
+                <label for="">Password</label>
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <!-- <p>
+                <input type="checkbox" name="" id="">
+                Remember me <a href="#">Forget Pasword</a>
+            </p> -->
+
+            <input id="btn" type="submit" value="Login">
+
+            <p>
+                Don't have an account?
+                <a href="signup">Sign up</a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>
